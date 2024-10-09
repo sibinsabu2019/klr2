@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "67086622359",
+    "firebase_url": "https://kerala2024-e2d53-default-rtdb.firebaseio.com",
+    "project_id": "kerala2024-e2d53",
+    "storage_bucket": "kerala2024-e2d53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67086622359:android:ebb9f6af89a675781093d2",
+        "android_client_info": {
+          "package_name": "com.example.k_lottery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiUwsmG-W5jDXLJ_ijDx2gzcwP3ntHwrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67086622359:android:e91dbc6741b327231093d2",
+        "android_client_info": {
+          "package_name": "com.example.kerala_Lottery_Results"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiUwsmG-W5jDXLJ_ijDx2gzcwP3ntHwrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67086622359:android:040a81451a1559591093d2",
+        "android_client_info": {
+          "package_name": "com.example.kerala_lottery_result"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiUwsmG-W5jDXLJ_ijDx2gzcwP3ntHwrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
