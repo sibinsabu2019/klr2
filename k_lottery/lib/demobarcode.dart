@@ -208,7 +208,7 @@ log("Cleaned Prize Details: $cleanedPrizeDetails");
                         content: Text(
                           "$correspondingPrize\nCode: ${enteredCode.replaceAll(' ', '')}",
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.green,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -294,46 +294,128 @@ log("Cleaned Prize Details: $cleanedPrizeDetails");
         ),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+  crossAxisAlignment: CrossAxisAlignment.stretch,
+  children: [
+    SizedBox(height: 20),
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(height: 20),
+        Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(9),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.3),
+          spreadRadius: 2,
+          blurRadius: 8,
+          offset: Offset(2, 4),
+        ),
+      ],
+    ),
+    padding: EdgeInsets.all(16),
+    child: Column(
+      children: [
+        ElevatedButton(
+          onPressed: selectDate,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: selectDate,
-                child: Text(
-                  selectedDate == null
-                      ? 'Select Date'
-                      : 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: codeController,
-                decoration: InputDecoration(
-                  labelText: 'Enter Lottery Code',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: scanBarcode,
-                child: const Text('Scan Barcode'),
-                style: ElevatedButton.styleFrom(
-                  textStyle: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: searchLottery,
-                child: const Text('Search'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color.fromARGB(255, 23, 13, 133),
-                  textStyle: TextStyle(fontSize: 18),
-                ),
+              Icon(Icons.calendar_today, color: Colors.deepPurple),
+              SizedBox(width: 8),
+              Text(
+                selectedDate == null
+                    ? 'Select Date'
+                    : 'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}',
+                style: TextStyle(fontSize: 18, color: Colors.deepPurple),
               ),
             ],
           ),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, // Text color
+            backgroundColor: Colors.white, // Button color
+            textStyle: TextStyle(fontSize: 18), // Text style
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Make the button more square-like
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(9),
+            ),
+            elevation: 5, // Adds a shadow
+          ),
+        ),
+        SizedBox(height: 16),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(9),
+          ),
+          padding: EdgeInsets.all(8),
+          child: TextField(
+            controller: codeController,
+            decoration: InputDecoration(
+              labelText: 'Enter Lottery Code',
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('or'),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: scanBarcode,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.qr_code, color: Colors.deepPurple),
+                  SizedBox(width: 8),
+                  Text('Scan Barcode', style: TextStyle(color: Colors.deepPurple),),
+                ],
+              ),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, // Text color
+                backgroundColor: Colors.white, // Button color
+                textStyle: TextStyle(fontSize: 18), // Text style
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Make the button more square-like
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                elevation: 5, // Adds a shadow
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: searchLottery,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Search'),
+            ],
+          ),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, // Text color
+            backgroundColor: Colors.green, // Button color
+            textStyle: TextStyle(fontSize: 18), // Text style
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Make the button more square-like
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(9),
+            ),
+            elevation: 5, // Adds a shadow
+          ),
+        ),
+      ],
+    ),
+        ),
+      ],
+    ),
+  ],
+)
         ),
       ),
     );

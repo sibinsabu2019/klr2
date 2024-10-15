@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k_lottery/scert.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:share_plus/share_plus.dart'; // Import the share_plus package
+import 'package:share_plus/share_plus.dart'; 
 import 'package:provider/provider.dart';
 import 'package:k_lottery/shared_models.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,56 +55,42 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   // Share Content Function
-  // Share Content Function
-void _shareContent()async {
-  final result = Provider.of<Result>(context, listen: false).data;
-  
-  if (result != null) {
-    // Create a well-formatted string for sharing
-    StringBuffer shareText = StringBuffer();
+  void _shareContent() async {
+    final result = Provider.of<Result>(context, listen: false).data;
 
-     String appLink ='https://play.google.com/store/apps/details?id=com.example.klottery';
-    // Add title
-    shareText.writeln('Kerala Lottery Results\n');
-     
-         shareText.writeln('Download the KLottery App now: $appLink\n',);
-    // Add Prize Details and corresponding Prize Info
-    shareText.writeln('Prize Details:');
-    for (int i = 0; i < result.prizeDetails.length; i++) {
-      // Get the prize detail
-      final prizeDetail = result.prizeDetails[i];
-      
-      // Get the corresponding prize info
-      final prizeInfo = result.prizeInfo.length > i ? result.prizeInfo[i] : '';
+    if (result != null) {
+      StringBuffer shareText = StringBuffer();
+      String appLink =
+          'https://play.google.com/store/apps/details?id=com.example.klottery';
+      shareText.writeln('Kerala Lottery Results\n');
+      shareText.writeln('Download the KLottery App now: $appLink\n');
+      shareText.writeln('Prize Details:');
+      for (int i = 0; i < result.prizeDetails.length; i++) {
+        final prizeDetail = result.prizeDetails[i];
+        final prizeInfo =
+            result.prizeInfo.length > i ? result.prizeInfo[i] : '';
+        shareText.writeln('$prizeDetail\n$prizeInfo\n');
+      }
 
-      // Add both to the share text
-      shareText.writeln('$prizeDetail\n$prizeInfo\n');
+      Share.share(shareText.toString(), subject: 'Kerala Lottery Results');
+    } else {
+      Share.share('Download KLottery App now',
+          subject: 'Kerala Lottery Result');
     }
-
-    // Share the formatted text
-    Share.share(
-      shareText.toString(),
-      subject: 'Kerala Lottery Results',
-    );
-  } else {
-    Share.share(
-      'Download KLottery App now',
-      subject: 'Kerala Lottery Result',
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 20, 28, 137),
+        backgroundColor: Colors.green
+        .withOpacity(0.9),
         title: Text(
           widget.title,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20.0,
+            fontSize: 22.0, // Slightly larger text
+            fontWeight: FontWeight.bold,
           ),
         ),
         iconTheme: IconThemeData(
@@ -115,20 +101,13 @@ void _shareContent()async {
             padding: const EdgeInsets.all(4.0),
             child: TextButton(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 0, 120, 215),
-                ),
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: _shareContent, // Assign share functionality here
               child: Icon(
                 Icons.share,
-                size: 20.0,
+                size: 25.0,
               ),
             ),
           ),
@@ -142,9 +121,17 @@ void _shareContent()async {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Search',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: Icon(Icons.search, color: Colors.teal),
+                labelStyle: TextStyle(
+                  color: Colors.teal,
+                  fontWeight: FontWeight.bold,
+                ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(
+                    color: Colors.teal,
+                    width: 2.0,
+                  ),
                 ),
               ),
             ),
@@ -169,8 +156,8 @@ void _shareContent()async {
                     return ResultTile(
                       key: key,
                       heading: e,
-                      detailedResult: data
-                          .prizeInfo[data.prizeDetails.indexOf(e)],
+                      detailedResult:
+                          data.prizeInfo[data.prizeDetails.indexOf(e)],
                       searchText: _searchText,
                     );
                   }).toList(),
@@ -190,39 +177,49 @@ class ResultTile extends StatelessWidget {
   final String searchText;
 
   const ResultTile(
-      {super.key, required this.heading, required this.detailedResult, required this.searchText});
+      {super.key,
+      required this.heading,
+      required this.detailedResult,
+      required this.searchText});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // More balanced padding
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xFFFFE0B2),
+          borderRadius: BorderRadius.circular(16), // Smoother corners
+          color: Colors.white, // Clean white background
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: Offset(2, 4), // Shadow to add depth
+            ),
+          ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, // Align text to start
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0), // More padding for breathing space
               child: Text(
                 heading,
                 style: TextStyle(
                   fontSize: 22.0,
-                  color: Colors.black,
+                  color: Colors.teal,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
               child: RichText(
-                textAlign: TextAlign.center,
                 text: TextSpan(
                   style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.black,
+                    fontSize: 25.0,
+                    color: Colors.grey[800],
                   ),
                   children: _highlightSearchText(detailedResult, searchText),
                 ),
@@ -250,7 +247,7 @@ class ResultTile extends StatelessWidget {
         TextSpan(
           text: searchText,
           style: TextStyle(
-            backgroundColor: Colors.yellow,
+            backgroundColor: Colors.yellow[300],
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),

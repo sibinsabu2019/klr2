@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:k_lottery/barcode_scanner_page.dart';
 import 'package:k_lottery/demobarcode.dart';
 import 'package:k_lottery/scert.dart';
 import 'package:k_lottery/search_page.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+    
       home: MainWidget(),
     );
   }
@@ -37,11 +39,13 @@ class MainWidget extends StatefulWidget {
   _MainState createState() => _MainState();
 }
 
-class _MainState extends State<MainWidget> {
+class _MainState extends  State< MainWidget> with SingleTickerProviderStateMixin  {
   int _selectedIndex = 0;
   String appVersion = 'Version: 1.0.0';
   String _selectedLanguage = 'English'; // Default language
   bool isLoading = false;
+  late TabController _tabController;
+
 
   final List<Widget> _pages = [
     Home(),
@@ -54,6 +58,7 @@ class _MainState extends State<MainWidget> {
   void initState() {
     super.initState();
     Provider.of<Result>(context, listen: false).FetchLang("english");
+     _tabController = TabController(length: 3, vsync: this);
   }
 
   void _onItemTapped(int index) {
@@ -250,6 +255,16 @@ void showRateDialog(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
+         bottom: TabBar(
+           unselectedLabelColor: Colors.white,
+           
+    controller: _tabController,
+    tabs: [
+      Tab(icon: Icon(Icons.home,color: Colors.white,), text: 'Home', ),
+      Tab(icon: Icon(Icons.search,color: Colors.white), text: 'Search'),
+      Tab(icon: Icon(Icons.camera_alt,color: Colors.white), text: 'Scanner'),
+    ],
+  ),
         title: Text(
           _selectedIndex == 0 ? 'K-Lottery' : _titles[_selectedIndex],
           style: TextStyle(
@@ -257,7 +272,9 @@ void showRateDialog(BuildContext context) {
             fontSize: 20.0,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 20, 28, 137),
+         backgroundColor: Colors.green .withOpacity(0.9), // Semi-transparent app bar
+              elevation: 20, // Add elevation to give a shadow effect
+             
         iconTheme: IconThemeData(color: Colors.white),
         actions: [
           PopupMenuButton<String>(
@@ -287,107 +304,131 @@ void showRateDialog(BuildContext context) {
         ],
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 20, 28, 137),
+  child: Container(
+    color: Colors.grey[500], // Dark grey background for the entire drawer
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(0.67), // Slightly lighter grey for the header
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'K-Lottery Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold, // Bold for emphasis
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'K-Lottery Menu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    appVersion,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+              SizedBox(height: 8),
+              Text(
+                appVersion,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                ),
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.update),
-              title: Text('Update'),
-               onTap: () async {
-                  Navigator.pop(context); // Continue button
-                  // Open Play Store link
-                  final url = 'https://play.google.com/store/apps/details?id=com.example.klottery';
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  }
-                },
-            ),
-            ListTile(
-              leading: Icon(Icons.description),
-              title: Text('Disclaimer'),
-              onTap: () {
-                Navigator.pop(context);
-                showDisclaimer(context); // Show disclaimer
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.star_rate),
-              title: Text('Rate Us'),
-              onTap: () {
-                Navigator.pop(context);
-                showRateDialog(context);
-                // Add functionality here for "Rate Us"
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.privacy_tip),
-              title: Text('Privacy Policy'),
-              onTap: () {
-                Navigator.pop(context);
-                openPrivacyPolicy();
-                // Add functionality here for "Privacy Policy"
-              },
-              
-            ),
-             ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Share '),
-              onTap: () {
-                Navigator.pop(context);
-                shareApp();
-                // Add functionality here for "Privacy Policy"
-              },
-              
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      body: isLoading == false ? _pages[_selectedIndex] : Center(child: CircularProgressIndicator()),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+        ListTile(
+          leading: Icon(Icons.update, color: Colors.white70), // Icon color to match the theme
+          title: Text(
+            'Update',
+            style: TextStyle(color: Colors.white), // Text color
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+          onTap: () async {
+            Navigator.pop(context); // Continue button
+            final url = 'https://play.google.com/store/apps/details?id=com.example.klottery';
+            if (await canLaunch(url)) {
+              await launch(url);
+            }
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.description, color: Colors.white70),
+          title: Text(
+            'Disclaimer',
+            style: TextStyle(color: Colors.white),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_2_outlined),
-            label: 'Scanner',
+          onTap: () {
+            Navigator.pop(context);
+            showDisclaimer(context);
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.star_rate, color: Colors.white70),
+          title: Text(
+            'Rate Us',
+            style: TextStyle(color: Colors.white),
           ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.grey,
-        unselectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
+          onTap: () {
+            Navigator.pop(context);
+            showRateDialog(context);
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.privacy_tip, color: Colors.white70),
+          title: Text(
+            'Privacy Policy',
+            style: TextStyle(color: Colors.white),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            openPrivacyPolicy();
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.share, color: Colors.white70),
+          title: Text(
+            'Share',
+            style: TextStyle(color: Colors.white),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            shareApp();
+          },
+        ),
+      ],
+    ),
+  ),
+)
+,
+      body: isLoading == false ?  TabBarView(
+  controller: _tabController,
+  children: [
+    // Home tab content
+    Home(),
+    // Search tab content
+  SearchPage(),
+    // Scanner tab content
+    DemoScanner(),
+  ],
+) : Center(child: CircularProgressIndicator()),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.search),
+      //       label: 'Search',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.qr_code_2_outlined),
+      //       label: 'Scanner',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   selectedItemColor: Colors.grey,
+      //   unselectedItemColor: Colors.blue,
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 }

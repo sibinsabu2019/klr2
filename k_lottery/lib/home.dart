@@ -87,10 +87,10 @@ class _HomeState extends State<Home> {
       ),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Two-column layout
+          crossAxisCount: 1, // Two-column layout
           crossAxisSpacing: 8.0,
           mainAxisSpacing: 8.0,
-          childAspectRatio: 2, // Adjust the aspect ratio as needed
+          childAspectRatio: 3.5, // Adjust the aspect ratio as needed
         ),
         itemCount: entries.length,
         itemBuilder: (context, index) {
@@ -195,6 +195,7 @@ class _LotteryEntryCardState extends State<LotteryEntryCard> {
             child: ResultPage(
               info: widget.lotteryinfo,
               title:Provider.of<Result>(context, listen: false)
+                .Languages[widget.entry["name"]]==null?widget.lotteryinfo.lotteryName:Provider.of<Result>(context, listen: false)
                 .Languages[widget.entry["name"]],
             ),
           ),
@@ -215,75 +216,83 @@ class _LotteryEntryCardState extends State<LotteryEntryCard> {
               widget.entry["name"].toString();
         }
       },
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8.0,
-                  offset: Offset(2, 2),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Consumer<Result>(
-                    builder: (context, result, child) {
-                      // String lotteryName = result.Languages[widget.entry["name"]?.trim()];
-                      return LotteryEntryTitle(
-                        date: widget.entry["date"] ?? "",
-                        serialNo: widget.entry["SerialNumber"] ?? "",
-                      );
-                    },
-                  ),
-                  // LotteryEntryTitle(
-                  //   date: widget.entry["date"] ?? "",
-                  //   serialNo: widget.entry["SerialNumber"] ?? "",
-                  // ),
-                  SizedBox(height: 8),
-                  LotteryEntryDate(
-                      title: Provider.of<Result>(context, listen: false)
-                                  .Languages[widget.entry["name"]] !=
-                              null
-                          ? Provider.of<Result>(context, listen: false)
-                              .Languages[widget.entry["name"]]
-                              .toString()
-                          : widget.entry["name"].toString()),
-                ],
+      
+      child:Stack(
+  children: [
+    Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors. white.withOpacity(0.7), // Standard white background for a clean look
+          borderRadius: BorderRadius.circular(16), // Smooth rounded corners
+           boxShadow: [
+                              BoxShadow(
+                                color: Colors.black .withOpacity(0.3),
+                                spreadRadius: 2,
+                                blurRadius: 4,
+                                offset: Offset(2, 4),
+                              ),
+                            ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0), // Standard padding for content
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Consumer<Result>(
+                builder: (context, result, child) {
+                  return LotteryEntryTitle(lotteryname: Provider.of<Result>(context, listen: false)
+                            .Languages[widget.entry["name"]] !=
+                        null
+                    ? Provider.of<Result>(context, listen: false)
+                        .Languages[widget.entry["name"]]
+                        .toString()
+                    : widget.entry["name"].toString(),
+                    date: widget.entry["date"] ?? "",
+                    serialNo: widget.entry["SerialNumber"] ?? "",
+                  );
+                },
               ),
+              SizedBox(height: 12), // Spacing between elements
+              // LotteryEntryDate(
+              //   title: Provider.of<Result>(context, listen: false)
+              //               .Languages[widget.entry["name"]] !=
+              //           null
+              //       ? Provider.of<Result>(context, listen: false)
+              //           .Languages[widget.entry["name"]]
+              //           .toString()
+              //       : widget.entry["name"].toString(),
+              // ),
+            ],
+          ),
+        ),
+      ),
+    ),
+    if (widget.isNew)
+      Positioned(
+        top: 0,
+        left: 0,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4), // Comfortable padding for 'New' tag
+          decoration: BoxDecoration(
+            color: Colors.orangeAccent, // Eye-catching accent color for the 'New' label
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12), // Symmetrical corners for a sleek design
             ),
           ),
-          if (widget.isNew)
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  'New',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+          child: Text(
+            'New',
+            style: TextStyle(
+              color: Colors.white, // White text for contrast
+              fontSize: 12, // Standard size for tag text
+              fontWeight: FontWeight.bold, // Bold to highlight the 'New' tag
             ),
-        ],
+          ),
+        ),
       ),
+  ],
+),
     );
   }
 }
@@ -291,39 +300,15 @@ class _LotteryEntryCardState extends State<LotteryEntryCard> {
 class LotteryEntryTitle extends StatelessWidget {
   final String date;
   final String serialNo;
+  final String lotteryname;
 
-  const LotteryEntryTitle({required this.date, required this.serialNo});
+  const LotteryEntryTitle({required this.date, required this.serialNo,required this.lotteryname});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          date,
-          style: TextStyle(
-            color: Color.fromARGB(221, 32, 32, 32),
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 36, 46, 178),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            serialNo,
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFFFFFFFF),
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-      ],
-    );
+    return ListTile(leading: CircleAvatar(backgroundColor:Colors.green[700] ,radius:40,
+      child:Text(serialNo,style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),) ,),title: Text(date,),
+    subtitle: Text(lotteryname),);
   }
 }
 
@@ -337,9 +322,9 @@ class LotteryEntryDate extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        color: Colors.blue.shade900,
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
+        color: Colors.teal,
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
